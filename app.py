@@ -12,7 +12,7 @@ from datetime import date, datetime, time, timedelta
 from oauth2client.service_account import ServiceAccountCredentials 
 
 from data_funcao import data_hoje, data_final_abertura, dia_da_semana_extenso
-from api_funcoes import proxima_pagina, todos_eventos, id_sessao_deliberativa, pautas_sessao_deliberativa, mensagem_telegram
+from api_funcoes import proxima_pagina, todos_eventos, id_sessao_deliberativa, pautas_sessao_deliberativa, mensagem_telegram, mensagem_telegram_2
 from descadrastamento import processo_de_descadrastamento
 
 
