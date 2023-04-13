@@ -100,7 +100,6 @@ def processa_update():
     
     
   if message == '/exit':
-    todos_inscritos = sheet_inscritos.get_all_values()
     id_procurado = str(chat_id) # é o mesmo valor que o chat_id calculado lá em cima, mas como string, pois é assim que o sheet entende
     def processo_de_descadrastamento(id_procurado):
         linha_encontrada = None
