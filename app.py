@@ -169,6 +169,9 @@ def telegram_bot_envio():
         texto_resposta = mensagem_telegram_2()
     
     # Envio das mensagens
+    data = data_hoje()
+    hora = hora_hoje()
+    
     enviadas = []  
     inscritos = sheet_inscritos.col_values(6)
     for id in inscritos:
