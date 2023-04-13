@@ -90,22 +90,39 @@ def processa_update():
     else:
       texto_resposta = 'Olá, humane! \n \nEu sou o <b>Aurora da Câmara dos Deputados</b>, mas você pode me chamar de <b>Aurora da Câmara</b>! \U0001F916 \n \nPara ter acesso às pautas de discussões da Sessão Deliberativa de hoje, basta digitar /manda que eu te envio. \n \n Seja bem-vinde! \N{winking face}'
       inscricoes.append([str(date), str(time), first_name, last_name, username, sender_id, chat_id, message])
- 
+  nova_mensagem = {"chat_id": chat_id, "text": texto_resposta, "parse_mode": 'html'}
+  resposta = requests.post(f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage", data = nova_mensagem)
+    
+    
   elif message == '/exit':
     todos_inscritos = sheet_inscritos.get_all_values()
     id_procurado = str(chat_id) # é o mesmo valor que o chat_id calculado lá em cima, mas como string, pois é assim que o sheet entende
-    processo_de_descadrastamento()
+    def processo_de_descadrastamento(id_procurado):
+        linha_encontrada = None
+        todos_inscritos = sheet_inscritos.get_all_values()
+
+        for i, row in enumerate(todos_inscritos):
+            if row[5] == id_procurado: # id está na sexta coluna (índice 5)
+                linha_encontrada = i+1  # índice da linha no sheet começa com 0, então adiciona-se 1 ao índice da lista
+
+            if linha_encontrada:
+                sheet_inscritos.delete_row(linha_encontrada)
+
+        texto = f'Você foi descadastrado e não irá mais receber as minhas mensagens! Que pena, humane! \U0001F622 \n \nCaso deseje voltar a receber os meus trabalhos, basta me mandar "/start" que eu te reinscrevo. \n \nNos vemos por aí \U0001F916'
+        return texto
+    
     texto_resposta = processo_de_descadrastamento()
+    nova_mensagem = {"chat_id": chat_id, "text": texto_resposta, "parse_mode": 'html'}
+    resposta = requests.post(f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage", data = nova_mensagem)
     descadastrados.append([str(date), str(time), "descadastrado", username, first_name, last_name, chat_id, texto_resposta])
  
+
   else:
     texto_resposta = f'Olá, humane! \n \nVocê já se inscreveu para receber os destaques do Executivo publicados no <i>Diário Oficial da União</i>. Agora é só esperar os envios das mensagens todo dia de manhã a partir das 7h \U0001F609 \n \nCaso queira acessar um comando específico, clique em "menu" aqui do lado esquerdo da tela'
+    nova_mensagem = {"chat_id": chat_id, "text": texto_resposta, "parse_mode": 'html'}
+    resposta = requests.post(f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage", data = nova_mensagem)
     mensagens.append([str(date), str(time), "enviada", user_name, first_name, last_name, chat_id, texto_resposta])
-    
-    
-  # Código para enviar a resposta ao usuário pelo Telegram  
-  nova_mensagem = {"chat_id": chat_id, "text": texto_resposta, "parse_mode": 'html'}
-  resposta = requests.post(f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage", data = nova_mensagem)
+   
 
     
   sheet_inscritos.append_rows(inscricoes)
