@@ -66,7 +66,7 @@ def pautas_sessao_deliberativa():
 
           pautas += f'<b>{ordem} | {titulo}</b> \n<b>Ementa:</b> {ementa} \n \n'
       
-      pautas_finais = f'{pautas} \n \nÉ importante lembrar que essa é uma prévia do que será discutido. Os deputados podem fazer alterações durante a sessão'
+      pautas_finais = f'{pautas} \n \n<i>\U000026A0 É importante lembrar que essa é uma prévia do que será discutido. Os deputados podem fazer alterações durante a sessão.</i>'
     return pautas_finais
   
   
