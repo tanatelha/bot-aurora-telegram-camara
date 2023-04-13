@@ -19,7 +19,6 @@ def todos_eventos():
     dados = resp.json()
     eventos.extend(dados['dados'])
     url = proxima_pagina(dados)
-  
   return eventos
 
 
@@ -29,23 +28,19 @@ def todos_eventos():
 def id_sessao_deliberativa():
   id = 0
   for item in todos_eventos():
-
     if item['descricaoTipo'] == 'Sessão Deliberativa':
       id = item['id']   
-
   resultado = id          
   return resultado
 
 # Função para captar as pautas
 def pautas_sessao_deliberativa():
-
   if id_sessao_deliberativa() == 0:
     pautas = ''
 
   else:  
     response_api_2 = requests.get(f'https://dadosabertos.camara.leg.br/api/v2/eventos/{id_sessao_deliberativa()}/pauta')
     response_api_2 = response_api_2.json()
-    response_api_2
 
     if response_api_2['dados'] == []:
       pautas = f'<b>\N{card index dividers} Pautas</b> \n \n<i>As prévias das pautas ainda não foram definidas.</i> Às 13h, vou buscar saber se tivemos novas atualizações. Em caso afirmativo, eu te mando aqui. Não precisa se preocupar \N{relieved face} \n \nEnquanto isso, confira mais informações no site <a href="https://www.camara.leg.br/agenda">Câmara dos Deputados</a>'
@@ -70,8 +65,8 @@ def pautas_sessao_deliberativa():
   
   ## 3 | União final de todas as raspagens para construir a mensagem final do Telegram
   
+  ### Tipo 1 de mensagem:
   def mensagem_telegram():
-    
     # bloco das datas
     data_hoje()
     data_final_abertura()
@@ -111,3 +106,34 @@ def pautas_sessao_deliberativa():
   
   
   
+### Tipo 2 de mensagem:
+def mensagem_telegram_2():
+  # bloco das datas
+  data_hoje()
+  data_final_abertura()
+  dia_da_semana_extenso()
+
+  # coletar todos os eventos
+  todos_eventos()
+
+  # buscar se tem sessão deliberativa
+  teve_sessao_deliberativa = False
+  abertura = f'<b>Bom dia, humana! \U0001F31E \N{hot beverage}</b> \nVamos lá para as informações dessa {dia_da_semana_extenso()} \n \n\U0001F4C6 <b>{data_final_abertura()}</b> \n \n'
+
+  #### se tiver sessão deliberativa
+  for item in todos_eventos():
+    if item['descricaoTipo'] == 'Sessão Deliberativa':
+      teve_sessao_deliberativa = True
+      id = item['id']             
+      descricao_geral = item['descricaoTipo']
+      descricao_detalhada = item['descricao']
+      local = item['localCamara']['nome']
+      link = str(item['urlRegistro'])
+      horario = item['dataHoraInicio'][11:16]
+
+      abertura += f"<b>{horario} | {descricao_geral}</b> \n{descricao_detalhada} \n{local} \n \n"
+  
+  adicional = f'\U000026A0 <b>Sobre as pautas de hoje...</b> \n \nSinto te informar que a prévia da pauta é tão grande que ultrapassou o limite de caracteres do Telegram para envio de mensagens \U0001F62D \n \nPara saber o que será discutido, te indico acessar diretamente o site da <a href="https://www.camara.leg.br/evento-legislativo/{id_sessao_deliberativa()}/">agenda do dia</a> \n \nBoa sorte na cobertura! Parece que vai ser longa...'
+
+  texto_final = f'{abertura} \n{adicional}'
+  return texto_final
