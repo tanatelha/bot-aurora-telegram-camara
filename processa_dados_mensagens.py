@@ -110,4 +110,4 @@ def processa_update():
   sheet_descadastrados.append_rows(descadastrados)
   
  
-  return "ok"
+  return f'{resposta.text}'
