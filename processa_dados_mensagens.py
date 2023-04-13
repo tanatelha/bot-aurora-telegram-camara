@@ -89,11 +89,14 @@ def processa_update():
       texto_resposta = f'Hmmm... \U0001F914 \n \nPelas minhas anotações, <b>você já está inscrita</b> para receber as pautas das da Sessão Deliberativa da Câmara dos Deputados! \n \nO envio é feito a partir das 10h da manhã. Caso a pauta do dia não esteja disponível nesse horário, eu faço uma nova conferência durante o almoço. \n \nMas, ó, não precisa se preocupar! Eu cuido disso para você! \N{winking face} \n \nCaso queira acessar um comando específico, clique em "menu" aqui do lado esquerdo da tela \n \n \U00002B07'
       mensagens.append([str(date), str(time), "recebida", user_name, first_name, last_name, chat_id, message])
       mensagens.append([str(date), str(time), "enviada", user_name, first_name, last_name, chat_id, texto_resposta])
+      nova_mensagem = {"chat_id": chat_id, "text": texto_resposta, "parse_mode": 'html'}
+      resposta = requests.post(f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage", data = nova_mensagem)
+    
     else:
       texto_resposta = 'Olá, humane! \n \nEu sou o <b>Aurora da Câmara dos Deputados</b>, mas você pode me chamar de <b>Aurora da Câmara</b>! \U0001F916 \n \nPara ter acesso às pautas de discussões da Sessão Deliberativa de hoje, basta digitar /manda que eu te envio. \n \n Seja bem-vinde! \N{winking face}'
       inscricoes.append([str(date), str(time), first_name, last_name, username, sender_id, chat_id, message])
-  nova_mensagem = {"chat_id": chat_id, "text": texto_resposta, "parse_mode": 'html'}
-  resposta = requests.post(f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage", data = nova_mensagem)
+      nova_mensagem = {"chat_id": chat_id, "text": texto_resposta, "parse_mode": 'html'}
+      resposta = requests.post(f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage", data = nova_mensagem)
     
     
   if message == '/exit':
