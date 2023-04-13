@@ -28,10 +28,12 @@ with open("credenciais.json", mode="w") as arquivo:
 conta = ServiceAccountCredentials.from_json_keyfile_name("credenciais.json")
 
 api = gspread.authorize(conta)
-planilha = api.open_by_key(f'{GOOGLE_SHEETS_KEY}') 
+planilha = api.open_by_key(f'{GOOGLE_SHEETS_KEY}')
+sheet_inscritos = planilha.worksheet('inscritos')
+sheet_inscritos = planilha.worksheet('inscritos')
 sheet_mensagens = planilha.worksheet('mensagens')
 sheet_enviadas = planilha.worksheet('enviadas')
-sheet_inscritos = planilha.worksheet('inscritos')
+
 sheet_descadastrados = planilha.worksheet('descadastrados')
 
 
@@ -55,7 +57,6 @@ def telegram_bot():
   ### dados da mensagem
   update_id = update['update_id']
   first_name = update['message']['from']['first_name']
-  sender_id = update['message']['from']['id']
   chat_id = update['message']['chat']['id']
   date = datetime.fromtimestamp(update['message']['date']).date().strftime('%d/%m/%Y')
  
@@ -74,6 +75,12 @@ def telegram_bot():
     username = f"@{update['message']['from']['username']}"
   else:
     username = f'@ indisponível'
+    
+  if 'last_name' not in update['message']['from']['last_name']:
+    last_name = update['message']['from']['last_name']
+  else:
+    last_name = 'Sem last name disponível'
+
 
   
   ### definição da mensagem a ser enviada a partir da mensagem recebida
@@ -86,14 +93,15 @@ def telegram_bot():
             texto_resposta = f'Hmmm... \U0001F914 \n \nPelas minhas anotações, <b>você já está inscrita</b> para receber as pautas das da Sessão Deliberativa da Câmara dos Deputados! \n \nO envio é feito a partir das 10h da manhã. Caso a pauta do dia não esteja disponível nesse horário, eu faço uma nova conferência durante o almoço. \n \nMas, ó, não precisa se preocupar! Eu cuido disso para você! \N{winking face} \n \nCaso queira acessar um comando específico, clique em "menu" aqui do lado esquerdo da tela \n \n \U00002B07'
             nova_mensagem = {"chat_id": chat_id, "text": texto_resposta, "parse_mode": 'html'}
             resposta = requests.post(f"https://api.telegram.org./bot{TELEGRAM_TOKEN}/sendMessage", data = nova_mensagem)
-            mensagens.append([str(date), str(time), "recebida", username, first_name, chat_id, message])
-            mensagens.append([str(date), str(time), "enviada", username, first_name, chat_id, texto_resposta])
+            mensagens.append([str(date), str(time), "recebida", first_name, last_name, username,chat_id, message])
+            mensagens.append([str(date), str(time), "enviada", first_name, last_name, username, chat_id, texto_resposta])
 
         else:
             texto_resposta = f'Olá, humane! \n \nEu sou o <b>Aurora da Câmara dos Deputados</b>, mas você pode me chamar de <b>Aurora da Câmara</b>! \U0001F916 \n \nSou um bot criado para enviar diariamente, por meio do Telegram, as prévias das pautas de discussões da Sessão Deliberativa na Câmara dos Deputados \N{winking face}'
             nova_mensagem = {"chat_id": chat_id, "text": texto_resposta, "parse_mode": 'html'}
             resposta = requests.post(f"https://api.telegram.org./bot{TELEGRAM_TOKEN}/sendMessage", data = nova_mensagem)
-            inscricoes.append([str(date), str(time), first_name, username, sender_id, chat_id, message])
+            inscricoes.append([str(date), str(time), first_name, last_name, username, chat_id, message])
+            mensagens.append([str(date), str(time), "enviada", first_name, last_name, username, chat_id, texto_resposta])
             
             
   elif message == "/exit":
@@ -117,15 +125,15 @@ def telegram_bot():
     texto_resposta = processo_de_descadrastamento()
     nova_mensagem = {"chat_id": id_procurado, "text": texto_resposta, "parse_mode": 'html'}
     resposta = requests.post(f"https://api.telegram.org./bot{TELEGRAM_TOKEN}/sendMessage", data = nova_mensagem)
-    descadastrados.append([str(date), str(time), "descadastrado", username, first_name, chat_id, texto_resposta])
+    descadastrados.append([str(date), str(time), "descadastrado", first_name, last_name, username, chat_id, texto_resposta])
 
     
   else:
     texto_resposta = f'Olá, humana! \n \nVocê já se inscreveu para receber as prévias das pautas da <i>Câmara dos Deputados</i>. Agora é só esperar os envios das mensagens, de segunda a sexta, a partir das 10h \U0001F609 \n \nCaso queira acessar um comando específico, clique em "menu" aqui do lado esquerdo da tela'
     nova_mensagem = {"chat_id": chat_id, "text": texto_resposta, "parse_mode": 'html'}
     resposta = requests.post(f"https://api.telegram.org./bot{TELEGRAM_TOKEN}/sendMessage", data = nova_mensagem)
-    mensagens.append([str(date), str(time), "recebida", username, first_name, chat_id, message])
-    mensagens.append([str(date), str(time), "enviada", username, first_name, chat_id, texto_resposta])
+    mensagens.append([str(date), str(time), "recebida", first_name, last_name, username, chat_id, message])
+    mensagens.append([str(date), str(time), "enviada", first_name, last_name, username, chat_id, texto_resposta])
     
  
  
@@ -139,21 +147,33 @@ def telegram_bot():
   return "ok"
     
     
-  
+@app.route("/bot-aurora-telegram-raspagem")  
+def telegram_bot_raspagem():
+    raspagem = []
+    data = data_hoje()
+    hora = hora_hoje()
+    texto = mensagem_telegram()
+    raspagem.append([str(data), str(hora), texto])
+    sheet_raspagem.append_rows(raspagem)
+    return f'Raspagem feita às {hora} do dia {data}'
   
 @app.route("/bot-aurora-telegram-envio")
 def telegram_bot_envio():
-    data = data_hoje()
-    hora = hora_hoje()
-    inscritos = sheet_inscritos.col_values(6)
-    tamanho_mensagem = len(mensagem_telegram())
-    if tamanho_mensagem <= 4096:
-        texto_resposta = mensagem_telegram()
+    # Coletando a raspagem no sheet
+    data_procurada = data_hoje()  # definindo a data que você quer buscar
+    linha = sheet_raspagem.find(data_procurada).row # Procurando a linha na qual a data está localizada
+    raspagem_do_dia = sheet_raspagem.cell(linha,3).value # Acessando a célula da terceira coluna na linha encontrada e obtendo o valor
+    
+    # Definindo qual mensagem será enviada
+    tamanho_mensagem = len(raspagem_do_dia)
+    if tamanho_mensagem <= 4096:    # O Telegram só envia mensagens de até 4.096 caracteres
+        texto_resposta = raspagem_do_dia
     else:
         texto_resposta = mensagem_telegram_2()
     
-
-    enviadas = []
+    # Envio das mensagens
+    enviadas = []  
+    inscritos = sheet_inscritos.col_values(6)
     for id in inscritos:
         nova_mensagem = {"chat_id": id,
                          "text": texto_resposta,
