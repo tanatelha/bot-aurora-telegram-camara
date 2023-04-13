@@ -115,7 +115,7 @@ def processa_update():
         texto = f'Você foi descadastrado e não irá mais receber as minhas mensagens! Que pena, humane! \U0001F622 \n \nCaso deseje voltar a receber os meus trabalhos, basta me mandar "/start" que eu te reinscrevo. \n \nNos vemos por aí \U0001F916'
         return texto
     
-    texto_resposta = processo_de_descadrastamento()
+    texto_resposta = processo_de_descadrastamento(id_procurado)
     nova_mensagem = {"chat_id": chat_id, "text": texto_resposta, "parse_mode": 'html'}
     resposta = requests.post(f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage", data = nova_mensagem)
     descadastrados.append([str(date), str(time), "descadastrado", username, first_name, last_name, chat_id, texto_resposta])
