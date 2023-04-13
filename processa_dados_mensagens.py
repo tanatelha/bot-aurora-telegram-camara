@@ -94,7 +94,7 @@ def processa_update():
   resposta = requests.post(f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage", data = nova_mensagem)
     
     
-  elif message == '/exit':
+  if message == '/exit':
     todos_inscritos = sheet_inscritos.get_all_values()
     id_procurado = str(chat_id) # é o mesmo valor que o chat_id calculado lá em cima, mas como string, pois é assim que o sheet entende
     def processo_de_descadrastamento(id_procurado):
