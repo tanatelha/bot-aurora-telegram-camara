@@ -84,7 +84,7 @@ def mensagem_telegram():
 
   # buscar se tem sessão deliberativa
   teve_sessao_deliberativa = False
-  texto = f'<b>Bom dia, humana! \U0001F31E \N{hot beverage}</b> \nVamos lá para as informações dessa {dia_da_semana_extenso()} \n \n\U0001F4C6 <b>{data_final_abertura()}</b> \n \n \n'
+  texto = f'<b>Bom dia, humana! \U0001F31E \N{hot beverage}</b> \nVamos lá para as informações dessa {dia_da_semana_extenso()}! \n \n \n\U0001F4C6 <b>{data_final_abertura()}</b> \n \n'
 
   #### se tiver sessão deliberativa
   for item in todos_eventos():
@@ -97,7 +97,7 @@ def mensagem_telegram():
       link = str(item['urlRegistro'])
       horario = item['dataHoraInicio'][11:16]
 
-      texto += f"<b>{horario} | {descricao_geral}</b> \n{descricao_detalhada} \n{local} \n \n"
+      texto += f"<b>{horario} | {descricao_geral}</b> \n{descricao_detalhada} \n{local} \n \n \n"
 
       id_sessao_deliberativa()
       pautas_sessao_deliberativa()
