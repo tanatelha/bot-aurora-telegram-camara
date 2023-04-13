@@ -74,42 +74,42 @@ def pautas_sessao_deliberativa():
   
 ### Tipo 1 de mensagem:
 def mensagem_telegram():
-# bloco das datas
-data_hoje()
-data_final_abertura()
-dia_da_semana_extenso()
+  # bloco das datas
+  data_hoje()
+  data_final_abertura()
+  dia_da_semana_extenso()
 
-# coletar todos os eventos
-todos_eventos()
+  # coletar todos os eventos
+  todos_eventos()
 
-# buscar se tem sessão deliberativa
-teve_sessao_deliberativa = False
-texto = f'<b>Bom dia, humana! \U0001F31E \N{hot beverage}</b> \nVamos lá para as informações dessa {dia_da_semana_extenso()} \n \n\U0001F4C6 <b>{data_final_abertura()}</b> \n \n \n'
+  # buscar se tem sessão deliberativa
+  teve_sessao_deliberativa = False
+  texto = f'<b>Bom dia, humana! \U0001F31E \N{hot beverage}</b> \nVamos lá para as informações dessa {dia_da_semana_extenso()} \n \n\U0001F4C6 <b>{data_final_abertura()}</b> \n \n \n'
 
-#### se tiver sessão deliberativa
-for item in todos_eventos():
-  if item['descricaoTipo'] == 'Sessão Deliberativa':
-    teve_sessao_deliberativa = True
-    id = item['id']             
-    descricao_geral = item['descricaoTipo']
-    descricao_detalhada = item['descricao']
-    local = item['localCamara']['nome']
-    link = str(item['urlRegistro'])
-    horario = item['dataHoraInicio'][11:16]
+  #### se tiver sessão deliberativa
+  for item in todos_eventos():
+    if item['descricaoTipo'] == 'Sessão Deliberativa':
+      teve_sessao_deliberativa = True
+      id = item['id']             
+      descricao_geral = item['descricaoTipo']
+      descricao_detalhada = item['descricao']
+      local = item['localCamara']['nome']
+      link = str(item['urlRegistro'])
+      horario = item['dataHoraInicio'][11:16]
 
-    texto += f"<b>{horario} | {descricao_geral}</b> \n{descricao_detalhada} \n{local} \n \n"
+      texto += f"<b>{horario} | {descricao_geral}</b> \n{descricao_detalhada} \n{local} \n \n"
 
-    id_sessao_deliberativa()
-    pautas_sessao_deliberativa()
+      id_sessao_deliberativa()
+      pautas_sessao_deliberativa()
 
-    texto += f'{pautas_sessao_deliberativa()}'
+      texto += f'{pautas_sessao_deliberativa()}'
 
 
-#### se não tiver sessão deliberativa
-if not teve_sessao_deliberativa:
-  texto += f"Não tem Sessão Deliberativa marcada para o dia de hoje! \n \n<i>Pode descansar e fazer outra coisa, humana! \U0001F973</i>"
+  #### se não tiver sessão deliberativa
+  if not teve_sessao_deliberativa:
+    texto += f"Não tem Sessão Deliberativa marcada para o dia de hoje! \n \n<i>Pode descansar e fazer outra coisa, humana! \U0001F973</i>"
 
-return texto
+  return texto
   
   
   
