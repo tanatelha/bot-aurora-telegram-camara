@@ -11,7 +11,7 @@ from bs4 import BeautifulSoup
 from datetime import date, datetime, time, timedelta
 from oauth2client.service_account import ServiceAccountCredentials 
 
-from data_funcao import data_hoje, data_final_abertura, dia_da_semana_extenso
+from data_funcao import hora_hoje, data_hoje, data_final_abertura, dia_da_semana_extenso
 from api_funcoes import proxima_pagina, todos_eventos, id_sessao_deliberativa, pautas_sessao_deliberativa, mensagem_telegram, mensagem_telegram_2
 from descadrastamento import processo_de_descadrastamento
 
@@ -54,10 +54,26 @@ def telegram_bot():
   
 @app.route("/bot-aurora-telegram-envio")
 def telegram_bot_envio():
-  tamanho_mensagem = len(mensagem_telegram())
-  if tamanho_mensagem <= 4096:
-    texto_resposta = mensagem_telegram()
-  else:
-    texto_resposta = mensagem_telegram_2()
+    data = data_hoje()
+    hora = hora_hoje()
+    inscritos = sheet_inscritos.col_values(6)
+    tamanho_mensagem = len(mensagem_telegram())
+    if tamanho_mensagem <= 4096:
+        texto_resposta = mensagem_telegram()
+    else:
+        texto_resposta = mensagem_telegram_2()
     
+
+    enviadas = []
+    for id in inscritos:
+        nova_mensagem = {"chat_id": id,
+                         "text": texto_resposta,
+                         "parse_mode": 'html'}
+        resposta_2 = requests.post(f"https://api.telegram.org./bot{TELEGRAM_TOKEN}/sendMessage", data=nova_mensagem)
+        enviadas.append([str(data), str(hora), "enviada", id, texto_resposta])
+    
+    sheet_enviadas.append_rows(enviadas)
+
+    print(resposta_2.text) 
+    return f'{(resposta_2.text)}'
   
