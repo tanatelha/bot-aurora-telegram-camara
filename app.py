@@ -28,10 +28,9 @@ conta = ServiceAccountCredentials.from_json_keyfile_name("credenciais.json")
 api = gspread.authorize(conta)
 planilha = api.open_by_key(f'{GOOGLE_SHEETS_KEY}')
 sheet_inscritos = planilha.worksheet('inscritos')
-sheet_inscritos = planilha.worksheet('inscritos')
+sheet_raspagem = planilha.worksheet('raspagem')
 sheet_mensagens = planilha.worksheet('mensagens')
 sheet_enviadas = planilha.worksheet('enviadas')
-
 sheet_descadastrados = planilha.worksheet('descadastrados')
 
 
