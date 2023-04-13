@@ -5,14 +5,11 @@ import os # biblioteca para ver chaves em ambiente virtual
 # importar bibliotecas externas: import em ordem alfética e depois froms em ordem alfabética
 import gspread
 import pytz
-import requests
-from flask import Flask, request
-from bs4 import BeautifulSoup
 from datetime import date, datetime, time, timedelta
 from oauth2client.service_account import ServiceAccountCredentials 
 
-from data_funcao import data_hoje, data_final_abertura, dia_da_semana_extenso
-from api_funcoes import proxima_pagina, todos_eventos, id_sessao_deliberativa, pautas_sessao_deliberativa, mensagem_telegram
+
+# importanto os outros pacotes desse repositório
 from descadrastamento import processo_de_descadrastamento
 
 
@@ -29,17 +26,15 @@ conta = ServiceAccountCredentials.from_json_keyfile_name("credenciais.json")
 
 api = gspread.authorize(conta)
 planilha = api.open_by_key(f'{GOOGLE_SHEETS_KEY}') 
+sheet_inscritos = planilha.worksheet('inscritos')
 sheet_mensagens = planilha.worksheet('mensagens')
 sheet_enviadas = planilha.worksheet('enviadas')
-sheet_inscritos = planilha.worksheet('inscritos')
 sheet_descadastrados = planilha.worksheet('descadastrados')
 
 
 
 
-
-
-# Função que processa as mensagens recebida no Telegram dá um retorno
+# Função que processa as mensagens recebida no Telegram e dá um retorno
 
 def processa_update(dados):
   inscricoes = []
@@ -101,20 +96,15 @@ def processa_update(dados):
  
   else:
     texto_resposta = f'Olá, humane! \n \nVocê já se inscreveu para receber os destaques do Executivo publicados no <i>Diário Oficial da União</i>. Agora é só esperar os envios das mensagens todo dia de manhã a partir das 7h \U0001F609 \n \nCaso queira acessar um comando específico, clique em "menu" aqui do lado esquerdo da tela'
-
+    mensagens.append([str(date), str(time), "enviada", user_name, first_name, last_name, chat_id, texto_resposta])
+    
+    
+  # Código para enviar a resposta ao usuário pelo Telegram  
   nova_mensagem = {"chat_id": chat_id, "text": texto_resposta, "parse_mode": 'html'}
   resposta = requests.post(f"https://api.telegram.org/bot{token}/sendMessage", data = nova_mensagem)
 
+    
   sheet_inscritos.append_rows(inscricoes)
   sheet_mensagens.append_rows(mensagens)
   sheet_descadastrados.append_rows(descadastrados)
-  
-  
-  
-  
-  
-  
-  
-  
-  
   
