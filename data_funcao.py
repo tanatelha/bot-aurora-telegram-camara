@@ -1,4 +1,14 @@
+import pytz
+import datetime
 from datetime import date, time, datetime, timedelta
+
+
+# Função para descobrir a hora em que o código está rodando
+def hora_hoje():
+  fuso_horario = pytz.timezone('America/Sao_Paulo')   # define o fuso horário
+  hora_atual_fuso = datetime.now(fuso_horario)   # obtem a hora atual com o fuso horário definido
+  hora_atual_fuso_formatada = hora_atual_fuso.strftime('%H:%M:%S')  # converte a hora atual em uma string formatada
+  return hora_atual_fuso_formatada
 
 
 # Função para descobrir a data do dia em questão (resultado no formato necessário para parâmetro da api da Câmara)
