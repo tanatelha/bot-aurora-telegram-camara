@@ -1,3 +1,7 @@
+# importar bibliotecas que já vêm com python
+import os # biblioteca para ver chaves em ambiente virtual
+
+
 # Importando as bibliotecas
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials 
