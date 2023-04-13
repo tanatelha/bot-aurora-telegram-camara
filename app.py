@@ -7,7 +7,6 @@ import gspread
 import pytz
 import requests
 from flask import Flask, request
-from bs4 import BeautifulSoup
 from datetime import date, datetime, time, timedelta
 from oauth2client.service_account import ServiceAccountCredentials 
 
