@@ -4,6 +4,7 @@ import os # biblioteca para ver chaves em ambiente virtual
 
 # importar bibliotecas externas: import em ordem alfética e depois froms em ordem alfabética
 import gspread
+from flask import Flask, request
 import pytz
 from datetime import date, datetime, time, timedelta
 from oauth2client.service_account import ServiceAccountCredentials 
