@@ -82,6 +82,8 @@ def processa_update():
   
   
   # Definindo as mensagens
+  texto_resposta = ''
+    
   if message == "/start":
     if str(chat_id) in inscritos:
       texto_resposta = f'Hmmm... \U0001F914 \n \nPelas minhas anotações, <b>você já está inscrita</b> para receber as pautas das da Sessão Deliberativa da Câmara dos Deputados! \n \nO envio é feito a partir das 10h da manhã. Caso a pauta do dia não esteja disponível nesse horário, eu faço uma nova conferência durante o almoço. \n \nMas, ó, não precisa se preocupar! Eu cuido disso para você! \N{winking face} \n \nCaso queira acessar um comando específico, clique em "menu" aqui do lado esquerdo da tela \n \n \U00002B07'
