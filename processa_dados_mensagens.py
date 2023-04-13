@@ -36,12 +36,13 @@ sheet_descadastrados = planilha.worksheet('descadastrados')
 
 # Função que processa as mensagens recebida no Telegram e dá um retorno
 
-def processa_update(dados):
+def processa_update():
   inscricoes = []
   mensagens = []
   descadastrados = []
   enviadas = []
   
+  update = request.json
   
   # Coletando informações de cada mensagem
   update_id = update['update_id']
@@ -108,3 +109,6 @@ def processa_update(dados):
   sheet_mensagens.append_rows(mensagens)
   sheet_descadastrados.append_rows(descadastrados)
   
+  print(message)
+  print(resposta.text)
+  return "ok"
