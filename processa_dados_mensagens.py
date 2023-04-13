@@ -109,6 +109,5 @@ def processa_update():
   sheet_mensagens.append_rows(mensagens)
   sheet_descadastrados.append_rows(descadastrados)
   
-  print(message)
-  print(resposta.text)
+ 
   return "ok"
