@@ -94,6 +94,7 @@ def processa_update():
   elif message == '/exit':
     todos_inscritos = sheet_inscritos.get_all_values()
     id_procurado = str(chat_id) # é o mesmo valor que o chat_id calculado lá em cima, mas como string, pois é assim que o sheet entende
+    processo_de_descadrastamento()
     texto_resposta = processo_de_descadrastamento()
     descadastrados.append([str(date), str(time), "descadastrado", username, first_name, last_name, chat_id, texto_resposta])
  
