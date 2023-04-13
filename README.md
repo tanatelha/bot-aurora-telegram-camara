@@ -1,5 +1,5 @@
 # Aurora da Câmara dos Deputados 🤖 🗂️ 🗳️
-A bot Aurora da Câmara dos Deputados ou Aurora da Câmara é o projeto final da primeira parte da especialização do Master em Jornalismo de Dados, Automação e Data Storytelling do Insper. A robô nasceu a partir de uma demanda pessoal de ter mais conhecimento do que estava sendo discutido na Casa Legislativa que representada o povo. Além desse contato, era exigido também uma maior praticidade para ter acesso a atualizações diárias com pouco gasto de tempo para ir até a informação.
+A bot **Aurora da Câmara dos Deputados** ou **Aurora da Câmara** é o projeto final da primeira parte da especialização do Master em Jornalismo de Dados, Automação e Data Storytelling do Insper. A robô nasceu a partir de uma demanda pessoal de ter mais conhecimento do que estava sendo discutido na Casa Legislativa que representada o povo. Além desse contato, era exigido também uma maior praticidade para ter acesso a atualizações diárias com pouco gasto de tempo para ir até a informação.
 
 Os códigos aqui apresentados executam as funcionalidades aprendidadas durante a especialização:
 * Acesso e coleta de dados por API,
