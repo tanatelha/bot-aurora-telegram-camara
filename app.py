@@ -46,9 +46,99 @@ def index():
 
 @app.route("/bot-aurora-telegram", methods=["POST"]) # método utilizado para enviar dados para o servidor
 def telegram_bot():
-  update = request.json
-  processa_update()
-  return f'{processa_update()}'
+  mensagens = []
+  inscricoes = []
+  descadastrados = []
+  
+  update = request.json 
+
+  ### dados da mensagem
+  update_id = update['update_id']
+  first_name = update['message']['from']['first_name']
+  sender_id = update['message']['from']['id']
+  chat_id = update['message']['chat']['id']
+  date = datetime.fromtimestamp(update['message']['date']).date().strftime('%d/%m/%Y')
+ 
+  # calcular horário / converter fuso
+  timestamp = update['message']['date']  
+  fuso_sao_paulo = pytz.timezone('America/Sao_Paulo') # converter para o fuso horário 'America/Sao_Paulo'
+  saopaulo_time = datetime.fromtimestamp(timestamp, fuso_sao_paulo)
+  time = saopaulo_time.strftime('%H:%M:%S')
+
+  if 'text' not in update['message']:
+    message = 'A mensagem é um conteúdo textual que não é possível compreender.'
+  else:
+    message = update['message']['text'].lower().strip()
+  
+  if "username" in update['message']['from']:
+    username = f"@{update['message']['from']['username']}"
+  else:
+    username = f'@ indisponível'
+
+  
+  ### definição da mensagem a ser enviada a partir da mensagem recebida
+  inscritos = sheet_inscritos.col_values(6)
+  print(inscritos)
+  
+  if message == "/start":
+        if str(chat_id) in inscritos:
+            print(chat_id)
+            texto_resposta = f'Hmmm... \U0001F914 \n \nPelas minhas anotações, <b>você já está inscrita</b> para receber as pautas das da Sessão Deliberativa da Câmara dos Deputados! \n \nO envio é feito a partir das 10h da manhã. Caso a pauta do dia não esteja disponível nesse horário, eu faço uma nova conferência durante o almoço. \n \nMas, ó, não precisa se preocupar! Eu cuido disso para você! \N{winking face} \n \nCaso queira acessar um comando específico, clique em "menu" aqui do lado esquerdo da tela \n \n \U00002B07'
+            nova_mensagem = {"chat_id": chat_id, "text": texto_resposta, "parse_mode": 'html'}
+            resposta = requests.post(f"https://api.telegram.org./bot{TELEGRAM_TOKEN}/sendMessage", data = nova_mensagem)
+            mensagens.append([str(date), str(time), "recebida", username, first_name, chat_id, message])
+            mensagens.append([str(date), str(time), "enviada", username, first_name, chat_id, texto_resposta])
+
+        else:
+            texto_resposta = f'Olá, humane! \n \nEu sou o <b>Aurora da Câmara dos Deputados</b>, mas você pode me chamar de <b>Aurora da Câmara</b>! \U0001F916 \n \nSou um bot criado para enviar diariamente, por meio do Telegram, as prévias das pautas de discussões da Sessão Deliberativa na Câmara dos Deputados \N{winking face}'
+            nova_mensagem = {"chat_id": chat_id, "text": texto_resposta, "parse_mode": 'html'}
+            resposta = requests.post(f"https://api.telegram.org./bot{TELEGRAM_TOKEN}/sendMessage", data = nova_mensagem)
+            inscricoes.append([str(date), str(time), first_name, username, sender_id, chat_id, message])
+            
+            
+  elif message == "/exit":
+    data = sheet_inscritos.get_all_values()
+    id_procurado = str(chat_id)  # é o mesmo valor que o chat_id calculado lá em cima
+
+    def processo_de_descadrastamento():
+        linha_encontrada = None
+
+        for i, row in enumerate(data):
+          if row[5] == id_procurado:
+            linha_encontrada = i+1    # índice da linha no sheet começa com 0, então adiciona-se 1 ao índice da lista
+
+        if linha_encontrada:
+          sheet_inscritos.delete_row(linha_encontrada)
+        
+        texto = f'Você foi descadastrado e não irá mais receber as minhas mensagens! Que pena, humana! \U0001F622 \n \nCaso deseje voltar a receber os meus trabalhos, basta me mandar "/start" que eu te reinscrevo. \n \nNos vemos por aí \U0001F916'
+
+        return texto
+    
+    texto_resposta = processo_de_descadrastamento()
+    nova_mensagem = {"chat_id": id_procurado, "text": texto_resposta, "parse_mode": 'html'}
+    resposta = requests.post(f"https://api.telegram.org./bot{TELEGRAM_TOKEN}/sendMessage", data = nova_mensagem)
+    descadastrados.append([str(date), str(time), "descadastrado", username, first_name, chat_id, texto_resposta])
+
+    
+  else:
+    texto_resposta = f'Olá, humana! \n \nVocê já se inscreveu para receber as prévias das pautas da <i>Câmara dos Deputados</i>. Agora é só esperar os envios das mensagens, de segunda a sexta, a partir das 10h \U0001F609 \n \nCaso queira acessar um comando específico, clique em "menu" aqui do lado esquerdo da tela'
+    nova_mensagem = {"chat_id": chat_id, "text": texto_resposta, "parse_mode": 'html'}
+    resposta = requests.post(f"https://api.telegram.org./bot{TELEGRAM_TOKEN}/sendMessage", data = nova_mensagem)
+    mensagens.append([str(date), str(time), "recebida", username, first_name, chat_id, message])
+    mensagens.append([str(date), str(time), "enviada", username, first_name, chat_id, texto_resposta])
+    
+ 
+ 
+  ### Atualizando a planilha sheets ss mensagens enviadas
+  sheet_inscritos.append_rows(inscricoes)
+  sheet_mensagens.append_rows(mensagens)
+  sheet_descadastrados.append_rows(descadastrados)
+    
+  print(message)
+  print(resposta.text)
+  return "ok"
+    
+    
   
   
 @app.route("/bot-aurora-telegram-envio")
