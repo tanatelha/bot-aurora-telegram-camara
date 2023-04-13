@@ -52,7 +52,7 @@ def telegram_bot():
   return "ok"
   
   
-@app.route("/bot-ben-telegram-envio")
+@app.route("/bot-aurora-telegram-envio")
 def telegram_bot_envio():
   tamanho_mensagem = len(mensagem_telegram())
   if tamanho_mensagem <= 4096:
@@ -61,11 +61,3 @@ def telegram_bot_envio():
     texto_resposta = mensagem_telegram_2()
     
   
-
-
-
-
-
-
-
-
