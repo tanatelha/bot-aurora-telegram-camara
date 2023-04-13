@@ -104,7 +104,7 @@ def processa_update():
     
   # Código para enviar a resposta ao usuário pelo Telegram  
   nova_mensagem = {"chat_id": chat_id, "text": texto_resposta, "parse_mode": 'html'}
-  resposta = requests.post(f"https://api.telegram.org/bot{token}/sendMessage", data = nova_mensagem)
+  resposta = requests.post(f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage", data = nova_mensagem)
 
     
   sheet_inscritos.append_rows(inscricoes)
