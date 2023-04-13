@@ -44,7 +44,7 @@ def index():
   return "Esse é o site da Aurora da Câmara dos Deputados"
 
 
-@app.route("/bote-aurora-telegram", methods=["POST"]) # método utilizado para enviar dados para o servidor
+@app.route("/bot-aurora-telegram", methods=["POST"]) # método utilizado para enviar dados para o servidor
 def telegram_bot():
   update = request.json
   processa_dados_mensagens(update)
