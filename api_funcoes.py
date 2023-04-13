@@ -1,5 +1,12 @@
 # importando bibliotecas necessárias
+import requests
 from bs4 import BeautifulSoup
+from datetime import date, datetime, time, timedelta
+
+
+# importanto as funções presentes em outros arquivos desse repositório
+from data_funcao import data_hoje, data_final_abertura, dia_da_semana_extenso
+
 
 
 # Caminho para coletar as informações necessárias para a producao da mensagem final
@@ -60,7 +67,7 @@ def pautas_sessao_deliberativa():
           pautas += f'<b>{ordem} | {titulo}</b> \n<b>Ementa:</b> {ementa} \n \n'
       
       pautas_finais = f'{pautas} \n \nÉ importante lembrar que essa é uma prévia do que será discutido. Os deputados podem fazer alterações durante a sessão'
-    return pautas
+    return pautas_finais
   
   
   ## 3 | União final de todas as raspagens para construir a mensagem final do Telegram
@@ -77,7 +84,7 @@ def pautas_sessao_deliberativa():
 
     # buscar se tem sessão deliberativa
     teve_sessao_deliberativa = False
-    abertura = f'<b>Bom dia, humana! \U0001F31E \N{hot beverage}</b> \nVamos lá para as informações dessa {dia_da_semana_extenso()} \n \n\U0001F4C6 <b>{data_final_abertura()}</b> \n \n \n'
+    texto = f'<b>Bom dia, humana! \U0001F31E \N{hot beverage}</b> \nVamos lá para as informações dessa {dia_da_semana_extenso()} \n \n\U0001F4C6 <b>{data_final_abertura()}</b> \n \n \n'
 
     #### se tiver sessão deliberativa
     for item in todos_eventos():
@@ -90,19 +97,19 @@ def pautas_sessao_deliberativa():
         link = str(item['urlRegistro'])
         horario = item['dataHoraInicio'][11:16]
 
-        abertura += f"<b>{horario} | {descricao_geral}</b> \n{descricao_detalhada} \n{local} \n \n"
+        texto += f"<b>{horario} | {descricao_geral}</b> \n{descricao_detalhada} \n{local} \n \n"
 
         id_sessao_deliberativa()
         pautas_sessao_deliberativa()
 
-        abertura += f'{pautas_sessao_deliberativa()}'
+        texto += f'{pautas_sessao_deliberativa()}'
 
 
     #### se não tiver sessão deliberativa
     if not teve_sessao_deliberativa:
-      abertura += f"Não tem Sessão Deliberativa marcada para o dia de hoje! \n \n<i>Pode descansar e fazer outra coisa, humana! \U0001F973</i>"
+      texto += f"Não tem Sessão Deliberativa marcada para o dia de hoje! \n \n<i>Pode descansar e fazer outra coisa, humana! \U0001F973</i>"
   
-    return abertura
+    return texto
   
   
   
@@ -118,7 +125,7 @@ def mensagem_telegram_2():
 
   # buscar se tem sessão deliberativa
   teve_sessao_deliberativa = False
-  abertura = f'<b>Bom dia, humana! \U0001F31E \N{hot beverage}</b> \nVamos lá para as informações dessa {dia_da_semana_extenso()} \n \n\U0001F4C6 <b>{data_final_abertura()}</b> \n \n'
+  texto = f'<b>Bom dia, humana! \U0001F31E \N{hot beverage}</b> \nVamos lá para as informações dessa {dia_da_semana_extenso()} \n \n\U0001F4C6 <b>{data_final_abertura()}</b> \n \n'
 
   #### se tiver sessão deliberativa
   for item in todos_eventos():
@@ -131,9 +138,9 @@ def mensagem_telegram_2():
       link = str(item['urlRegistro'])
       horario = item['dataHoraInicio'][11:16]
 
-      abertura += f"<b>{horario} | {descricao_geral}</b> \n{descricao_detalhada} \n{local} \n \n"
+      texto += f"<b>{horario} | {descricao_geral}</b> \n{descricao_detalhada} \n{local} \n \n"
   
   adicional = f'\U000026A0 <b>Sobre as pautas de hoje...</b> \n \nSinto te informar que a prévia da pauta é tão grande que ultrapassou o limite de caracteres do Telegram para envio de mensagens \U0001F62D \n \nPara saber o que será discutido, te indico acessar diretamente o site da <a href="https://www.camara.leg.br/evento-legislativo/{id_sessao_deliberativa()}/">agenda do dia</a> \n \nBoa sorte na cobertura! Parece que vai ser longa...'
 
-  texto_final = f'{abertura} \n{adicional}'
+  texto_final = f'{texto} \n{adicional}'
   return texto_final
