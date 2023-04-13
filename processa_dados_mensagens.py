@@ -49,7 +49,6 @@ def processa_update(dados):
   
   
   # Coletando informações de cada mensagem
-  update = dados
   update_id = update['update_id']
   first_name = update['message']['from']['first_name']
   user_name = update['message']['from']['username']
