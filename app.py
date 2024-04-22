@@ -82,14 +82,14 @@ def telegram_bot():
   if message == "/start":
         if str(chat_id) in inscritos:
             print(chat_id)
-            texto_resposta = f'Hmmm... \U0001F914 \n \nPelas minhas anotações, <b>você já está inscrita</b> para receber as pautas das da Sessão Deliberativa da Câmara dos Deputados! \n \nO envio é feito a partir das 10h da manhã, mas lembre-se que, por enquanto, eu <span>estou em atualização</span>, mas vou voltar em breve. \n \nNão precisa se preocupar! Eu cuido disso para você! \N{winking face} \n \nCaso queira acessar um comando específico, clique em "menu" aqui do lado esquerdo da tela \n \n \U00002B07'
+            texto_resposta = f'Hmmm... \U0001F914 \n \nPelas minhas anotações, <b>você já está inscrita</b> para receber as pautas das da Sessão Deliberativa da Câmara dos Deputados! \n \nO envio é feito a partir das 10h da manhã, mas lembre-se que, por enquanto, eu <b>estou em atualização</b>, mas vou voltar em breve. \n \nNão precisa se preocupar! Eu cuido disso para você! \N{winking face} \n \nCaso queira acessar um comando específico, clique em "menu" aqui do lado esquerdo da tela \n \n \U00002B07'
             nova_mensagem = {"chat_id": chat_id, "text": texto_resposta, "parse_mode": 'html'}
             resposta = requests.post(f"https://api.telegram.org./bot{TELEGRAM_TOKEN}/sendMessage", data = nova_mensagem)
             mensagens.append([str(date), str(time), "recebida", first_name, username,chat_id, message])
             mensagens.append([str(date), str(time), "enviada", first_name, username, chat_id, texto_resposta])
 
         else:
-            texto_resposta = f'Olá, humane! \n \nEu sou o <b>Aurora da Câmara dos Deputados</b>, mas você pode me chamar de <b>Aurora da Câmara</b>! \U0001F916 \n \nSou um bot criado para enviar diariamente, por meio do Telegram, as prévias das pautas de discussões da Sessão Deliberativa na Câmara dos Deputados. \n \n \U000026A0 <span>Lembre-se:</span> Por enquanto, eu estou em atualização, mas vou voltar em breve. \n \nJá guardei aqui o seu contato para o grande comeback. \N{winking face} '
+            texto_resposta = f'Olá, humane! \n \nEu sou o <b>Aurora da Câmara dos Deputados</b>, mas você pode me chamar de <b>Aurora da Câmara</b>! \U0001F916 \n \nSou um bot criado para enviar diariamente, por meio do Telegram, as prévias das pautas de discussões da Sessão Deliberativa na Câmara dos Deputados. \n \n \U000026A0 <b>Lembre-se:</b> Por enquanto, eu estou em atualização, mas vou voltar em breve. \n \nJá guardei aqui o seu contato para o grande comeback. \N{winking face} '
             nova_mensagem = {"chat_id": chat_id, "text": texto_resposta, "parse_mode": 'html'}
             resposta = requests.post(f"https://api.telegram.org./bot{TELEGRAM_TOKEN}/sendMessage", data = nova_mensagem)
             inscricoes.append([str(date), str(time), first_name, username, chat_id, message])
