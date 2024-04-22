@@ -94,7 +94,7 @@ def telegram_bot():
             mensagens.append([str(date), str(time), "enviada", first_name, last_name, username, chat_id, texto_resposta])
 
         else:
-            texto_resposta = f'Olá, humane! \n \nEu sou o <b>Aurora da Câmara dos Deputados</b>, mas você pode me chamar de <b>Aurora da Câmara</b>! \U0001F916 \n \nSou um bot criado para enviar diariamente, por meio do Telegram, as prévias das pautas de discussões da Sessão Deliberativa na Câmara dos Deputados \N{winking face}'
+            texto_resposta = f'Olá, humane! \n \nEu sou o <b>Aurora da Câmara dos Deputados</b>, mas você pode me chamar de <b>Aurora da Câmara</b>! \U0001F916 \n \nSou um bot criado para enviar diariamente, por meio do Telegram, as prévias das pautas de discussões da Sessão Deliberativa na Câmara dos Deputados. \n \nPor enquanto, eu estou em atualização, mas vou voltar em breve. Já guardei aqui o seu contato. \N{winking face} '
             nova_mensagem = {"chat_id": chat_id, "text": texto_resposta, "parse_mode": 'html'}
             resposta = requests.post(f"https://api.telegram.org./bot{TELEGRAM_TOKEN}/sendMessage", data = nova_mensagem)
             inscricoes.append([str(date), str(time), first_name, last_name, username, chat_id, message])
@@ -126,7 +126,7 @@ def telegram_bot():
 
     
   else:
-    texto_resposta = f'Olá, humana! \n \nVocê já se inscreveu para receber as prévias das pautas da <i>Câmara dos Deputados</i>. Agora é só esperar os envios das mensagens, de segunda a sexta, a partir das 10h \U0001F609 \n \nCaso queira acessar um comando específico, clique em "menu" aqui do lado esquerdo da tela'
+    texto_resposta = f'Olá, humana! \n \nVocê já se inscreveu para receber as prévias das pautas da <i>Câmara dos Deputados</i>. Agora é só esperar os envios das mensagens, de segunda a sexta, a partir das 10h \U0001F609 \n \nPor enquanto, eu estou em atualização, mas vou voltar em breve. Já guardei aqui o seu contato. \n \nCaso queira acessar um comando específico, clique em "menu" aqui do lado esquerdo da tela'
     nova_mensagem = {"chat_id": chat_id, "text": texto_resposta, "parse_mode": 'html'}
     resposta = requests.post(f"https://api.telegram.org./bot{TELEGRAM_TOKEN}/sendMessage", data = nova_mensagem)
     mensagens.append([str(date), str(time), "recebida", first_name, last_name, username, chat_id, message])
