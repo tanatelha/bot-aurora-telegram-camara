@@ -76,7 +76,7 @@ def telegram_bot():
 
   
   ### definição da mensagem a ser enviada a partir da mensagem recebida
-  inscritos = sheet_inscritos.col_values(6)
+  inscritos = sheet_inscritos.col_values(5)
   print(inscritos)
   
   if message == "/start":
