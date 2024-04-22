@@ -85,15 +85,15 @@ def telegram_bot():
             texto_resposta = f'Hmmm... \U0001F914 \n \nPelas minhas anotações, <b>você já está inscrita</b> para receber as pautas das da Sessão Deliberativa da Câmara dos Deputados! \n \nO envio é feito a partir das 10h da manhã. Caso a pauta do dia não esteja disponível nesse horário, eu faço uma nova conferência durante o almoço. \n \nMas, ó, não precisa se preocupar! Eu cuido disso para você! \N{winking face} \n \nCaso queira acessar um comando específico, clique em "menu" aqui do lado esquerdo da tela \n \n \U00002B07'
             nova_mensagem = {"chat_id": chat_id, "text": texto_resposta, "parse_mode": 'html'}
             resposta = requests.post(f"https://api.telegram.org./bot{TELEGRAM_TOKEN}/sendMessage", data = nova_mensagem)
-            mensagens.append([str(date), str(time), "recebida", first_name, last_name, username,chat_id, message])
-            mensagens.append([str(date), str(time), "enviada", first_name, last_name, username, chat_id, texto_resposta])
+            mensagens.append([str(date), str(time), "recebida", first_name, username,chat_id, message])
+            mensagens.append([str(date), str(time), "enviada", first_name, username, chat_id, texto_resposta])
 
         else:
             texto_resposta = f'Olá, humane! \n \nEu sou o <b>Aurora da Câmara dos Deputados</b>, mas você pode me chamar de <b>Aurora da Câmara</b>! \U0001F916 \n \nSou um bot criado para enviar diariamente, por meio do Telegram, as prévias das pautas de discussões da Sessão Deliberativa na Câmara dos Deputados. \n \nPor enquanto, eu estou em atualização, mas vou voltar em breve. Já guardei aqui o seu contato. \N{winking face} '
             nova_mensagem = {"chat_id": chat_id, "text": texto_resposta, "parse_mode": 'html'}
             resposta = requests.post(f"https://api.telegram.org./bot{TELEGRAM_TOKEN}/sendMessage", data = nova_mensagem)
-            inscricoes.append([str(date), str(time), first_name, last_name, username, chat_id, message])
-            mensagens.append([str(date), str(time), "enviada", first_name, last_name, username, chat_id, texto_resposta])
+            inscricoes.append([str(date), str(time), first_name, username, chat_id, message])
+            mensagens.append([str(date), str(time), "enviada", first_name, username, chat_id, texto_resposta])
             
             
   elif message == "/exit":
@@ -117,15 +117,15 @@ def telegram_bot():
     texto_resposta = processo_de_descadrastamento()
     nova_mensagem = {"chat_id": id_procurado, "text": texto_resposta, "parse_mode": 'html'}
     resposta = requests.post(f"https://api.telegram.org./bot{TELEGRAM_TOKEN}/sendMessage", data = nova_mensagem)
-    descadastrados.append([str(date), str(time), "descadastrado", first_name, last_name, username, chat_id, texto_resposta])
+    descadastrados.append([str(date), str(time), "descadastrado", first_name, username, chat_id, texto_resposta])
 
     
   else:
     texto_resposta = f'Olá, humana! \n \nVocê já se inscreveu para receber as prévias das pautas da <i>Câmara dos Deputados</i>. Agora é só esperar os envios das mensagens, de segunda a sexta, a partir das 10h \U0001F609 \n \nPor enquanto, eu estou em atualização, mas vou voltar em breve. Já guardei aqui o seu contato. \n \nCaso queira acessar um comando específico, clique em "menu" aqui do lado esquerdo da tela'
     nova_mensagem = {"chat_id": chat_id, "text": texto_resposta, "parse_mode": 'html'}
     resposta = requests.post(f"https://api.telegram.org./bot{TELEGRAM_TOKEN}/sendMessage", data = nova_mensagem)
-    mensagens.append([str(date), str(time), "recebida", first_name, last_name, username, chat_id, message])
-    mensagens.append([str(date), str(time), "enviada", first_name, last_name, username, chat_id, texto_resposta])
+    mensagens.append([str(date), str(time), "recebida", first_name, username, chat_id, message])
+    mensagens.append([str(date), str(time), "enviada", first_name, username, chat_id, texto_resposta])
     
  
  
