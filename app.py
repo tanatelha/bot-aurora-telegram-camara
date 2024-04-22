@@ -73,11 +73,6 @@ def telegram_bot():
   else:
     username = f'@ indisponível'
     
-  if 'last_name' not in update['message']['from']['last_name']:
-    last_name = update['message']['from']['last_name']
-  else:
-    last_name = 'Sem last name disponível'
-
 
   
   ### definição da mensagem a ser enviada a partir da mensagem recebida
